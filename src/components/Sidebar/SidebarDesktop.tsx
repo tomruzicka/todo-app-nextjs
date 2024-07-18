@@ -1,0 +1,41 @@
+"use client";
+
+import { ThemeToggle } from "@/app/theme/ThemeToggle";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { SidebarItems } from ".";
+import { SidebarButton } from "./SidebarButton";
+
+interface SidebarDesktopProps {
+  sidebarItems: SidebarItems;
+}
+
+export function SidebarDesktop({ sidebarItems }: SidebarDesktopProps) {
+  const pathname = usePathname();
+
+  return (
+    <div className="w-[250px] max-w-xs h-screen left-0 top-0 z-40 border-r bg-background">
+      <div className="h-full px-3 py-4">
+        <h3 className="mx-3 text-lg font-semibold text-foreground">Todo App</h3>
+        <div className="mt-5">
+          <div className="flex flex-col gap-1 w-full">
+            {sidebarItems.links.map((link, index) => (
+              <Link key={index} href={link.href}>
+                <SidebarButton
+                  variant={pathname === link.href ? "secondary" : "ghost"}
+                  icon={link.icon}
+                  className="w-full"
+                >
+                  {link.label}
+                </SidebarButton>
+              </Link>
+            ))}
+          </div>
+          <div className="absolute left-0 bottom-3 w-full px-3">
+            <ThemeToggle />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
