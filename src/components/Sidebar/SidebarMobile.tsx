@@ -8,10 +8,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components//ui/sheet";
+import { useDialog } from "@/components/Dialog/DialogProvider";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { FilePlus, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { SidebarItems } from ".";
 import { SidebarButton } from "./SidebarButton";
 
@@ -20,12 +22,14 @@ interface SidebarMobileProps {
 }
 
 export function SidebarMobile({ sidebarItems }: SidebarMobileProps) {
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { openDialog } = useDialog();
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button size="icon" variant="ghost" className="fixed top-3 left-3">
+        <Button size="icon" variant="secondary">
           <Menu size={20} />
         </Button>
       </SheetTrigger>
@@ -34,6 +38,17 @@ export function SidebarMobile({ sidebarItems }: SidebarMobileProps) {
         <SheetDescription hidden></SheetDescription>
         <div className="h-full">
           <div className="mt-5 flex flex-col w-full gap-1">
+            <Button
+              className="mb-4"
+              onClick={() => {
+                openDialog("add");
+                setOpen(false);
+              }}
+            >
+              <FilePlus className="mr-2 h-4 w-4" />
+              Add Todo
+            </Button>
+
             {sidebarItems.links.map((link, idx) => (
               <Link key={idx} href={link.href}>
                 <SidebarButton

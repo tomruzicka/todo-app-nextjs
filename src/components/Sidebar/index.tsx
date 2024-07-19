@@ -27,9 +27,9 @@ const sidebarItems: SidebarItems = {
 };
 
 export function Sidebar() {
-  const isDesktop = useMediaQuery("(min-width: 640px)");
+  const isMobile = useMediaQuery("(max-width: 640px)");
 
-  if (isDesktop) return <SidebarDesktop sidebarItems={sidebarItems} />;
+  if (isMobile) return <SidebarMobile sidebarItems={sidebarItems} />;
 
-  return <SidebarMobile sidebarItems={sidebarItems} />;
+  return <SidebarDesktop sidebarItems={sidebarItems} />;
 }

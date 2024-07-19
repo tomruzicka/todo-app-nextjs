@@ -1,11 +1,15 @@
+import { Dialog } from "@/components/Dialog";
+import { DialogProvider } from "@/components/Dialog/DialogProvider";
 import { Sidebar } from "@/components/Sidebar";
+import { TodoForm } from "@/components/TodoForm";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./theme/ThemeProvider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const fontFamily = Quicksand({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Todo App",
@@ -19,7 +23,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background antialiased",
-          inter.className
+          fontFamily.className
         )}
       >
         <ThemeProvider
@@ -28,10 +32,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex">
-            <Sidebar />
-            {children}
-          </div>
+          <DialogProvider>
+            <div className="flex">
+              <Sidebar />
+              {children}
+              <Toaster />
+              <Dialog />
+            </div>
+          </DialogProvider>
         </ThemeProvider>
       </body>
     </html>
