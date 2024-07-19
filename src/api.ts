@@ -1,3 +1,5 @@
+import { Todo } from "@/types";
+
 export const getAllTodos = async (): Promise<Todo[] | null> => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/todos`);
@@ -44,13 +46,3 @@ export const deleteTodoById = async (todoId: string) => {
   }
 };
 
-interface Todo {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: string;
-  due: Date;
-  status: "draft" | "inprogress" | "done";
-  priority: "low" | "medium" | "high";
-  tags: string[];
-}

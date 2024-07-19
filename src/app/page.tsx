@@ -18,26 +18,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/components/ui/use-toast";
+import { Todo, TodoStatus } from "@/types";
 import { Edit, EllipsisVertical, Trash2 } from "lucide-react";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
-
-interface Todo {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: string;
-  due: Date;
-  status: "draft" | "inprogress" | "done";
-  priority: "low" | "medium" | "high";
-  tags: string[];
-}
 
 const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { openDialog } = useDialog();
+  const { openDialog, save } = useDialog();
+  const { toast } = useToast();
 
   const getTodos = async () => {
     try {
@@ -45,22 +37,22 @@ const Home = () => {
       const todos = await getAllTodos();
       if (todos) setTodos(todos);
 
-      const date = new Date();
-      const startOfDate = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate()
-      );
-      const endOfDate = new Date(
-        startOfDate.getTime() + 24 * 60 * 60 * 1000 - 1
-      );
+      //   const date = new Date();
+      //   const startOfDate = new Date(
+      //     date.getFullYear(),
+      //     date.getMonth(),
+      //     date.getDate()
+      //   );
+      //   const endOfDate = new Date(
+      //     startOfDate.getTime() + 24 * 60 * 60 * 1000 - 1
+      //   );
 
-      const todayTodos = todos.filter(
-        (todo) =>
-          new Date(todo.due) >= startOfDate && new Date(todo.due) <= endOfDate
-      );
+      //   const todayTodos = todos.filter(
+      //     (todo) =>
+      //       new Date(todo.due) >= startOfDate && new Date(todo.due) <= endOfDate
+      //   );
 
-      console.log(todayTodos);
+      //   console.log(todayTodos);
     } catch (error) {
       setError("Failed to load todos");
     } finally {
@@ -70,25 +62,29 @@ const Home = () => {
 
   const deleteTodo = async (todoId: string) => {
     try {
-      const result = await deleteTodoById(todoId);
-      if (result)
+      const todo = await deleteTodoById(todoId);
+      if (todo)
         setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));
+      toast({ title: `Todo "${todo.title}" was removed!` });
     } catch (error) {
-    } finally {
+      toast({ title: "Somethin went wrong!" });
     }
   };
-
-  const getStatusLabel = (status: "draft" | "inprogress" | "done") => {
-    if (status === "draft") return "Draft";
-    if (status === "inprogress") return "In Progress";
-    if (status === "done") return "Done";
+  const statusLabels: { [key in TodoStatus]: string } = {
+    [TodoStatus.Draft]: "Draft",
+    [TodoStatus.InProgress]: "In Progress",
+    [TodoStatus.Done]: "Done",
   };
+
+  const getStatusLabel = (status: TodoStatus) => statusLabels[status];
+
   const capitalizeFirstLetter = (string: string) => {
     return string[0].toUpperCase() + string.slice(1);
   };
+
   useEffect(() => {
     getTodos();
-  }, []);
+  }, [save]);
 
   return (
     <div className="flex-1 p-10 h-screen overflow-auto">
@@ -122,7 +118,7 @@ const Home = () => {
                   </DropdownMenu>
                 </CardTitle>
                 <CardDescription className="flex flex-col gap-2">
-                  <Badge variant={todo.status} className="w-min">
+                  <Badge variant={todo.status} className="w-fit">
                     {getStatusLabel(todo.status)}
                   </Badge>
                   <Badge variant={todo.priority} className="w-min">
