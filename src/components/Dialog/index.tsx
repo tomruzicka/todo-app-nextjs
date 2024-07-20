@@ -117,9 +117,9 @@ export const Dialog = () => {
   };
 
   useEffect(() => {
-    if (!edit || !todoId) return;
+    if (!edit || !todoId || !open) return;
     getSelectedTodo(todoId);
-  }, [edit, todoId]);
+  }, [edit, todoId, open]);
 
   useEffect(() => {
     if (edit) return;
