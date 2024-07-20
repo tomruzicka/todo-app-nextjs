@@ -24,7 +24,8 @@ export function SidebarDesktop({ sidebarItems }: SidebarDesktopProps) {
         <div className="mt-5">
           <div className="flex flex-col gap-1 w-full">
             <Button className="mb-4" onClick={() => openDialog("add")}>
-              <FilePlus className="mr-2 h-4 w-4" /> Add Todo
+              <FilePlus className="mr-2 h-4 w-4" />
+              Add Todo
             </Button>
             {sidebarItems.links.map((link, index) => (
               <Link key={index} href={link.href}>

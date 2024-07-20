@@ -29,7 +29,7 @@ export function SidebarMobile({ sidebarItems }: SidebarMobileProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button size="icon" variant="secondary">
+        <Button size="icon" variant="secondary" className="m-1">
           <Menu size={20} />
         </Button>
       </SheetTrigger>
@@ -50,7 +50,7 @@ export function SidebarMobile({ sidebarItems }: SidebarMobileProps) {
             </Button>
 
             {sidebarItems.links.map((link, idx) => (
-              <Link key={idx} href={link.href}>
+              <Link key={idx} href={link.href} onClick={() => setOpen(false)}>
                 <SidebarButton
                   variant={pathname === link.href ? "secondary" : "ghost"}
                   icon={link.icon}
