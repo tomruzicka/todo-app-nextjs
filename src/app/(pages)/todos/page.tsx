@@ -27,9 +27,8 @@ import { useEffect, useState } from "react";
 
 const TodosPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<TodoStatus | "all">("all");
   const { openDialog, save } = useDialog();
   const { toast } = useToast();
@@ -40,7 +39,7 @@ const TodosPage = () => {
       const todos = await getAllTodos();
       if (todos) setTodos(todos);
     } catch (error) {
-      setError("Failed to load todos");
+      toast({ title: "Something went wrong!" });
     } finally {
       setIsLoading(false);
     }
@@ -161,7 +160,7 @@ const TodosPage = () => {
         </div>
       </div>
       <div className="flex flex-col gap-5">
-        {!isLoading ? (
+        {!isLoading && filteredTodos ? (
           filteredTodos.length > 0 ? (
             filteredTodos.map((todo, index) => (
               <Card key={`${todo.id}-${index}`}>
