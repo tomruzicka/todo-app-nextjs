@@ -1,6 +1,6 @@
 "use client";
 
-import { addNewTodo, getTodoById } from "@/api";
+import { addNewTodo, getTodoById, updateTodoById } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -38,10 +38,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { formSchema } from "@/schemas";
+import { TodoPriority, TodoStatus } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
@@ -49,7 +50,16 @@ import { LoadingSkeleton } from "../LoadingSkeleton";
 import { useDialog } from "./DialogProvider";
 
 export const Dialog = () => {
-  const { todoId, open, edit, title, description, closeDialog } = useDialog();
+  const {
+    todoId,
+    open,
+    edit,
+    title,
+    description,
+    openDialog,
+    closeDialog,
+    handleOnClick,
+  } = useDialog();
   const { toast } = useToast();
   const buttonLabel = edit ? "Save changes" : "Add";
   const [isLoading, setIsLoading] = useState(false);
@@ -59,12 +69,24 @@ export const Dialog = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (edit) return onEditSubmit(values.id, values);
     const result = await addNewTodo(values);
     if (result) {
       form.reset();
-      closeDialog();
+      handleOnClick();
       toast({
         title: `Todo "${values.title}" was added!`,
+      });
+    }
+  };
+
+  const onEditSubmit = async (todoId: string, newTodo: any) => {
+    const result = await updateTodoById(todoId, newTodo);
+    if (result) {
+      form.reset();
+      handleOnClick();
+      toast({
+        title: `Todo "${newTodo.title}" was updated!`,
       });
     }
   };
@@ -79,12 +101,15 @@ export const Dialog = () => {
         title: todo.title,
         description: todo.description,
         createdAt: todo.createdAt,
-        due: todo.due,
+        due: new Date(todo.due),
         status: todo.status,
         priority: todo.priority,
         tags: todo.tags,
       });
     } catch (error) {
+      toast({
+        title: "Something went wrong!",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -97,22 +122,21 @@ export const Dialog = () => {
 
   useEffect(() => {
     if (edit) return;
-    console.log("dasdasds");
     form.reset({
       id: uuidv4(),
       title: "",
       description: "",
       createdAt: new Date().toString(),
       due: undefined,
-      status: "draft",
-      priority: "low",
+      status: TodoStatus.Draft,
+      priority: TodoPriority.Low,
       tags: [],
     });
   }, [edit]);
 
   return (
     <DialogCn open={open} onOpenChange={closeDialog}>
-      <DialogContent>
+      <DialogContent className="overflow-y-auto h-full max-h-[860px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

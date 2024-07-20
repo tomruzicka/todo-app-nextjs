@@ -1,4 +1,4 @@
-import { Todo } from "@/types";
+import { Todo, TodoStatus } from "@/types";
 
 export const getAllTodos = async (): Promise<Todo[] | null> => {
   try {
@@ -46,3 +46,37 @@ export const deleteTodoById = async (todoId: string) => {
   }
 };
 
+export const updateTodoById = async (todoId: string, newTodo: Todo) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/todos/${todoId}`,
+      {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(newTodo),
+      }
+    );
+    if (response.ok) return response.json();
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateTodoProperty = async (
+  todoId: string,
+  updates: Partial<Omit<Todo, "id" | "createdAt">>
+) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/todos/${todoId}`,
+      {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(updates),
+      }
+    );
+    if (response.ok) return response.json();
+  } catch (error) {
+    return error;
+  }
+};
