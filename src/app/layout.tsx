@@ -1,13 +1,12 @@
 import { Dialog } from "@/components/Dialog";
 import { DialogProvider } from "@/components/Dialog/DialogProvider";
 import { Sidebar } from "@/components/Sidebar";
-import { TodoForm } from "@/components/TodoForm";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/theme/ThemeProvider";
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./theme/ThemeProvider";
 
 const fontFamily = Quicksand({ subsets: ["latin"], variable: "--font-sans" });
 

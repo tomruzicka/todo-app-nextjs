@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeToggle } from "@/app/theme/ThemeToggle";
 import {
   Sheet,
   SheetContent,
@@ -10,6 +9,7 @@ import {
 } from "@/components//ui/sheet";
 import { useDialog } from "@/components/Dialog/DialogProvider";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/theme/ThemeToggle";
 import { FilePlus, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

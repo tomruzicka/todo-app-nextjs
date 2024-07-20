@@ -1,7 +1,7 @@
 "use client";
 
-import { ThemeToggle } from "@/app/theme/ThemeToggle";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/theme/ThemeToggle";
 import { FilePlus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

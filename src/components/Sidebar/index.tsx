@@ -1,6 +1,6 @@
 "use client";
 
-import { useMediaQuery } from "@/app/theme/useMediaQuery";
+import { useMediaQuery } from "@/theme/useMediaQuery";
 import { Home, LucideIcon, SquareCheckBig } from "lucide-react";
 import { SidebarDesktop } from "./SidebarDesktop";
 import { SidebarMobile } from "./SidebarMobile";
