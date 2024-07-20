@@ -26,7 +26,7 @@ import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 
 const TodosPage = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>();
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [statusFilter, setStatusFilter] = useState<TodoStatus | "all">("all");
@@ -49,7 +49,10 @@ const TodosPage = () => {
     try {
       const todo = await deleteTodoById(todoId);
       if (todo) {
-        setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));
+        setTodos(
+          (prevTodos) =>
+            prevTodos && prevTodos.filter((todo) => todo.id !== todoId)
+        );
         toast({ title: `Todo "${todo.title}" was removed!` });
       }
     } catch (error) {
@@ -72,10 +75,12 @@ const TodosPage = () => {
     try {
       const result = await updateTodoProperty(todoId, { status });
       if (result) {
-        setTodos((prevTodos) =>
-          prevTodos.map((todo) =>
-            todo.id === todoId ? { ...todo, status } : todo
-          )
+        setTodos(
+          (prevTodos) =>
+            prevTodos &&
+            prevTodos.map((todo) =>
+              todo.id === todoId ? { ...todo, status } : todo
+            )
         );
         toast({ title: "Status was updated!" });
       }
@@ -88,10 +93,12 @@ const TodosPage = () => {
     try {
       const result = await updateTodoProperty(todoId, { priority });
       if (result) {
-        setTodos((prevTodos) =>
-          prevTodos.map((todo) =>
-            todo.id === todoId ? { ...todo, priority } : todo
-          )
+        setTodos(
+          (prevTodos) =>
+            prevTodos &&
+            prevTodos.map((todo) =>
+              todo.id === todoId ? { ...todo, priority } : todo
+            )
         );
         toast({ title: "Priority was updated!" });
       }
@@ -110,6 +117,7 @@ const TodosPage = () => {
   }, [save]);
 
   useEffect(() => {
+    if (!todos) return;
     if (statusFilter === "all") return setFilteredTodos(todos);
     const filteredTodos = todos.filter((todo) => todo.status === statusFilter);
     setFilteredTodos(filteredTodos);
@@ -160,8 +168,8 @@ const TodosPage = () => {
         </div>
       </div>
       <div className="flex flex-col gap-5">
-        {!isLoading && filteredTodos ? (
-          filteredTodos.length > 0 ? (
+        {!isLoading ? (
+          filteredTodos && filteredTodos.length > 0 ? (
             filteredTodos.map((todo, index) => (
               <Card key={`${todo.id}-${index}`}>
                 <CardHeader>
