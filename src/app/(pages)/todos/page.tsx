@@ -2,6 +2,7 @@
 
 import { deleteTodoById, getAllTodos, updateTodoProperty } from "@/api";
 import { useDialog } from "@/components/Dialog/DialogProvider";
+import { DropdownMenu as DropdownMenuBadge } from "@/components/DropdownMenu";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { NoData } from "@/components/NoData";
 import { Badge } from "@/components/ui/badge";
@@ -107,6 +108,20 @@ const TodosPage = () => {
     }
   };
 
+  const statusItems = [
+    { value: TodoStatus.Draft, label: "Draft" },
+    { value: TodoStatus.InProgress, label: "In Progress" },
+    { value: TodoStatus.Done, label: "Done" },
+  ];
+  const statusItemsFilter = [{ value: "all", label: "All" }].concat(
+    statusItems
+  );
+  const priorityItems = [
+    { value: TodoPriority.Low, label: "Low" },
+    { value: TodoPriority.Medium, label: "Medium" },
+    { value: TodoPriority.High, label: "High" },
+  ];
+
   useEffect(() => {
     getTodos();
   }, []);
@@ -129,42 +144,20 @@ const TodosPage = () => {
         <h1 className="text-4xl font-semibold mb-5">My Todos</h1>
         <div className="flex items-center gap-3">
           <p>Filter status: </p>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
+
+          <DropdownMenuBadge
+            triggerComponent={
               <Badge
                 variant={statusFilter !== "all" ? statusFilter : "default"}
                 className="w-fit"
               >
                 {statusFilter !== "all" ? getStatusLabel(statusFilter) : "All"}
               </Badge>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                disabled={statusFilter === "all"}
-                onClick={() => setStatusFilter("all")}
-              >
-                All
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                disabled={statusFilter === TodoStatus.Draft}
-                onClick={() => setStatusFilter(TodoStatus.Draft)}
-              >
-                Draft
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                disabled={statusFilter === TodoStatus.InProgress}
-                onClick={() => setStatusFilter(TodoStatus.InProgress)}
-              >
-                In Progress
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                disabled={statusFilter === TodoStatus.Done}
-                onClick={() => setStatusFilter(TodoStatus.Done)}
-              >
-                Done
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            }
+            items={statusItemsFilter}
+            disabledCondition={(value) => statusFilter === value}
+            onClickHandler={(value) => setStatusFilter(value as TodoStatus)}
+          />
         </div>
       </div>
       <div className="flex flex-col gap-5">
@@ -194,73 +187,31 @@ const TodosPage = () => {
                     </DropdownMenu>
                   </CardTitle>
                   <CardDescription className="flex gap-2">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
+                    <DropdownMenuBadge
+                      triggerComponent={
                         <Badge variant={todo.status} className="w-fit">
                           {getStatusLabel(todo.status)}
                         </Badge>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          disabled={todo.status === TodoStatus.Draft}
-                          onClick={() =>
-                            changeTodoStatus(todo.id, TodoStatus.Draft)
-                          }
-                        >
-                          Draft
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          disabled={todo.status === TodoStatus.InProgress}
-                          onClick={() =>
-                            changeTodoStatus(todo.id, TodoStatus.InProgress)
-                          }
-                        >
-                          In Progress
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          disabled={todo.status === TodoStatus.Done}
-                          onClick={() =>
-                            changeTodoStatus(todo.id, TodoStatus.Done)
-                          }
-                        >
-                          Done
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                      }
+                      items={statusItems}
+                      disabledCondition={(value) => todo.status === value}
+                      onClickHandler={(value) =>
+                        changeTodoStatus(todo.id, value)
+                      }
+                    />
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
+                    <DropdownMenuBadge
+                      triggerComponent={
                         <Badge variant={todo.priority} className="w-min">
                           {capitalizeFirstLetter(todo.priority)}
                         </Badge>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          disabled={todo.priority === TodoPriority.Low}
-                          onClick={() =>
-                            changeTodoPriority(todo.id, TodoPriority.Low)
-                          }
-                        >
-                          Low
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          disabled={todo.priority === TodoPriority.Medium}
-                          onClick={() =>
-                            changeTodoPriority(todo.id, TodoPriority.Medium)
-                          }
-                        >
-                          Medium
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          disabled={todo.priority === TodoPriority.High}
-                          onClick={() =>
-                            changeTodoPriority(todo.id, TodoPriority.High)
-                          }
-                        >
-                          High
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                      }
+                      items={priorityItems}
+                      disabledCondition={(value) => todo.priority === value}
+                      onClickHandler={(value) =>
+                        changeTodoPriority(todo.id, value)
+                      }
+                    />
                   </CardDescription>
                 </CardHeader>
                 {todo.description && (
