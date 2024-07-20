@@ -1,6 +1,8 @@
 "use client";
 
 import { addNewTodo, getTodoById, updateTodoById } from "@/api";
+import { LoadingSkeleton } from "@/components//LoadingSkeleton";
+import { useDialog } from "@/components/Dialog/DialogProvider";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -46,20 +48,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
-import { LoadingSkeleton } from "../LoadingSkeleton";
-import { useDialog } from "./DialogProvider";
 
 export const Dialog = () => {
-  const {
-    todoId,
-    open,
-    edit,
-    title,
-    description,
-    openDialog,
-    closeDialog,
-    handleOnClick,
-  } = useDialog();
+  const { todoId, open, edit, title, description, closeDialog, handleOnClick } =
+    useDialog();
   const { toast } = useToast();
   const buttonLabel = edit ? "Save changes" : "Add";
   const [isLoading, setIsLoading] = useState(false);
@@ -70,24 +62,33 @@ export const Dialog = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (edit) return onEditSubmit(values.id, values);
-    const result = await addNewTodo(values);
-    if (result) {
-      form.reset();
-      handleOnClick();
-      toast({
-        title: `Todo "${values.title}" was added!`,
-      });
+
+    try {
+      const result = await addNewTodo(values);
+      if (result) {
+        form.reset();
+        handleOnClick();
+        toast({
+          title: `Todo "${values.title}" was added!`,
+        });
+      }
+    } catch (error) {
+      toast({ title: "Something went wrong!" });
     }
   };
 
   const onEditSubmit = async (todoId: string, newTodo: any) => {
-    const result = await updateTodoById(todoId, newTodo);
-    if (result) {
-      form.reset();
-      handleOnClick();
-      toast({
-        title: `Todo "${newTodo.title}" was updated!`,
-      });
+    try {
+      const result = await updateTodoById(todoId, newTodo);
+      if (result) {
+        form.reset();
+        handleOnClick();
+        toast({
+          title: `Todo "${newTodo.title}" was updated!`,
+        });
+      }
+    } catch (error) {
+      toast({ title: "Something went wrong!" });
     }
   };
 

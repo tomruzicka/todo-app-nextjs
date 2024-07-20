@@ -6,24 +6,24 @@ import { LucideIcon } from "lucide-react";
 interface SidebarButtonProps extends ButtonProps {
   icon?: LucideIcon;
 }
-export function SidebarButton({
+export const SidebarButton = ({
   icon: Icon,
   className,
   children,
   ...props
-}: SidebarButtonProps) {
+}: SidebarButtonProps) => {
   return (
     <Button className={cn("gap-2 justify-start", className)} {...props}>
       {Icon && <Icon size={20} />}
       <span>{children}</span>
     </Button>
   );
-}
+};
 
-export function SidebarButtonSheet(props: SidebarButtonProps) {
+export const SidebarButtonSheet = (props: SidebarButtonProps) => {
   return (
     <SheetClose asChild>
       <SidebarButton {...props} />
     </SheetClose>
   );
-}
+};

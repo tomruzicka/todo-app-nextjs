@@ -21,7 +21,7 @@ interface SidebarMobileProps {
   sidebarItems: SidebarItems;
 }
 
-export function SidebarMobile({ sidebarItems }: SidebarMobileProps) {
+export const SidebarMobile = ({ sidebarItems }: SidebarMobileProps) => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { openDialog } = useDialog();
@@ -68,4 +68,4 @@ export function SidebarMobile({ sidebarItems }: SidebarMobileProps) {
       </SheetContent>
     </Sheet>
   );
-}
+};

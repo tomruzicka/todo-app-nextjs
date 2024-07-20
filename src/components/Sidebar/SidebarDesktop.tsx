@@ -13,7 +13,7 @@ interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
 }
 
-export function SidebarDesktop({ sidebarItems }: SidebarDesktopProps) {
+export const SidebarDesktop = ({ sidebarItems }: SidebarDesktopProps) => {
   const pathname = usePathname();
   const { openDialog } = useDialog();
 
@@ -46,4 +46,4 @@ export function SidebarDesktop({ sidebarItems }: SidebarDesktopProps) {
       </div>
     </div>
   );
-}
+};
