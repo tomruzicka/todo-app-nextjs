@@ -111,7 +111,6 @@ const TodosPage = () => {
   }, [save]);
 
   useEffect(() => {
-    console.log(statusFilter);
     if (statusFilter === "all") return setFilteredTodos(todos);
     const filteredTodos = todos.filter((todo) => todo.status === statusFilter);
     setFilteredTodos(filteredTodos);
