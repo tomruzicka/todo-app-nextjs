@@ -1,12 +1,12 @@
 import { Todo } from "@/types";
 
-export const getAllTodos = async (): Promise<Todo[] | null> => {
+export const getAllTodos = async (): Promise<Todo[]> => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/todos`);
-    if (response.ok) return response.json();
-    throw new Error();
+    if (response.ok) return await response.json();
+    throw new Error("Something went wrong!");
   } catch (error) {
-    throw new Error();
+    throw error as Error;
   }
 };
 
@@ -15,10 +15,10 @@ export const getTodoById = async (todoId: string): Promise<Todo | null> => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/todos/${todoId}`
     );
-    if (response.ok) return response.json();
-    throw new Error();
+    if (response.ok) return await response.json();
+    throw new Error("Something went wrong!");
   } catch (error) {
-    throw new Error();
+    throw error as Error;
   }
 };
 
@@ -29,10 +29,10 @@ export const addNewTodo = async (newTodo: Todo): Promise<Todo | null> => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(newTodo),
     });
-    if (response.ok) return response.json();
-    throw new Error();
+    if (response.ok) return await response.json();
+    throw new Error("Something went wrong!");
   } catch (error) {
-    throw new Error();
+    throw error as Error;
   }
 };
 
@@ -42,10 +42,10 @@ export const deleteTodoById = async (todoId: string): Promise<Todo | null> => {
       `${process.env.NEXT_PUBLIC_API_URL}/todos/${todoId}`,
       { method: "DELETE" }
     );
-    if (response.ok) return response.json();
-    throw new Error();
+    if (response.ok) return await response.json();
+    throw new Error("Something went wrong!");
   } catch (error) {
-    throw new Error();
+    throw error as Error;
   }
 };
 
@@ -62,10 +62,10 @@ export const updateTodoById = async (
         body: JSON.stringify(newTodo),
       }
     );
-    if (response.ok) return response.json();
-    throw new Error();
+    if (response.ok) return await response.json();
+    throw new Error("Something went wrong!");
   } catch (error) {
-    throw new Error();
+    throw error as Error;
   }
 };
 
@@ -82,9 +82,9 @@ export const updateTodoProperty = async (
         body: JSON.stringify(updates),
       }
     );
-    if (response.ok) return response.json();
-    throw new Error();
+    if (response.ok) return await response.json();
+    throw new Error("Something went wrong!");
   } catch (error) {
-    throw new Error();
+    throw error as Error;
   }
 };

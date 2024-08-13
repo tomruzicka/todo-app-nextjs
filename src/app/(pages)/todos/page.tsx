@@ -40,7 +40,8 @@ const TodosPage = () => {
       const todos = await getAllTodos();
       if (todos) setTodos(todos);
     } catch (error) {
-      toast({ title: "Something went wrong!" });
+      if (error instanceof Error) toast({ title: error.message });
+      else toast({ title: "An unknown error occurred" });
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +58,8 @@ const TodosPage = () => {
         toast({ title: `Todo "${todo.title}" was removed!` });
       }
     } catch (error) {
-      toast({ title: "Something went wrong!" });
+      if (error instanceof Error) toast({ title: error.message });
+      else toast({ title: "An unknown error occurred" });
     }
   };
   const statusLabels: { [key in TodoStatus]: string } = {
@@ -86,7 +88,8 @@ const TodosPage = () => {
         toast({ title: "Status was updated!" });
       }
     } catch (error) {
-      toast({ title: "Something went wrong!" });
+      if (error instanceof Error) toast({ title: error.message });
+      else toast({ title: "An unknown error occurred" });
     }
   };
 
@@ -104,7 +107,8 @@ const TodosPage = () => {
         toast({ title: "Priority was updated!" });
       }
     } catch (error) {
-      toast({ title: "Something went wrong!" });
+      if (error instanceof Error) toast({ title: error.message });
+      else toast({ title: "An unknown error occurred" });
     }
   };
 

@@ -73,7 +73,8 @@ export const Dialog = () => {
         });
       }
     } catch (error) {
-      toast({ title: "Something went wrong!" });
+      if (error instanceof Error) toast({ title: error.message });
+      else toast({ title: "An unknown error occurred" });
     }
   };
 
@@ -88,7 +89,8 @@ export const Dialog = () => {
         });
       }
     } catch (error) {
-      toast({ title: "Something went wrong!" });
+      if (error instanceof Error) toast({ title: error.message });
+      else toast({ title: "An unknown error occurred" });
     }
   };
 
@@ -108,9 +110,9 @@ export const Dialog = () => {
         tags: todo.tags,
       });
     } catch (error) {
-      toast({
-        title: "Something went wrong!",
-      });
+      if (error instanceof Error) toast({ title: error.message });
+      else toast({ title: "An unknown error occurred" });
+      closeDialog();
     } finally {
       setIsLoading(false);
     }
